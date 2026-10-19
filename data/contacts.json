@@ -1,0 +1,20 @@
+[
+  {
+    "id": "mn1dorexo84n2",
+    "timestamp": "2026-03-22T06:31:00.297Z",
+    "name": "Rahul Kumar",
+    "email": "rahul@gmail.com",
+    "gender": "Male",
+    "message": "I want to know about admission process for my son.",
+    "read": false
+  },
+  {
+    "id": "mn1dwvfa2mq4h",
+    "timestamp": "2026-03-22T06:37:18.742Z",
+    "name": "Test User",
+    "email": "test@test.com",
+    "gender": "",
+    "message": "Hello",
+    "read": false
+  }
+]
