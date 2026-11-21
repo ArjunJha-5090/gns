@@ -74,7 +74,7 @@ export default function AboutPage() {
               { number: 'I – XII', label: 'Hostel Facilities', icon: 'fa-bed' },
             ].map((fact, i) => (
               <div key={i}>
-                <div style={{ width: 60, height: 60, background: 'rgba(225,29,46,0.1)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', color: 'var(--red)', margin: '0 auto 16px' }}>
+                <div style={{ width: 60, height: 60, background: 'rgba(0,100,236,0.1)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', color: 'var(--red)', margin: '0 auto 16px' }}>
                   <i className={`fas ${fact.icon}`}></i>
                 </div>
                 <div style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', fontWeight: 900, color: 'var(--dark)', marginBottom: 4 }}>{fact.number}</div>

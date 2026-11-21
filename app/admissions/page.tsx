@@ -25,7 +25,7 @@ export default function AdmissionsPage() {
       {/* Admission Notice */}
       <section style={{ padding: '100px 0', background: '#fff' }}>
         <div className="container">
-          <div style={{ background: 'linear-gradient(135deg, #fff5f5, #fff)', border: '2px solid rgba(225,29,46,0.2)', borderRadius: 20, padding: 40, marginBottom: 60, textAlign: 'center' }}>
+          <div style={{ background: 'linear-gradient(135deg, #eef4ff, #fff)', border: '2px solid rgba(0,100,236,0.2)', borderRadius: 20, padding: 40, marginBottom: 60, textAlign: 'center' }}>
             <div style={{ display: 'inline-block', background: 'var(--red)', color: '#fff', padding: '6px 20px', borderRadius: 999, fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>
               <i className="fas fa-door-open" style={{ marginRight: 8 }}></i>Now Open
             </div>

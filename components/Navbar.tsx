@@ -1,324 +1,329 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
+import { X, ArrowUpRight, UserRound, CreditCard, Phone, Mail, MapPin } from 'lucide-react';
+import Shape, { type ShapeName } from '@/components/Shape';
+import { school } from '@/lib/site-data';
 
-type NavChild = { name: string; href: string; desc?: string };
-type NavItem = { name: string; href: string; children?: NavChild[] };
+type NavChild = { name: string; href: string };
+type NavGroup = { name: string; href: string; shape: ShapeName; color: string; children: NavChild[] };
 
-const leftLinks: NavItem[] = [
+const groups: NavGroup[] = [
   {
     name: 'About Us',
     href: '/about',
+    shape: 'bowtie',
+    color: 'text-blue',
     children: [
-      { name: 'Our Story', href: '/about', desc: 'Legacy since 1986' },
-      { name: 'Vision & Mission', href: '/vision', desc: 'What we stand for' },
-      { name: 'Desk Messages', href: '/desk-messages', desc: 'From our leadership' },
-      { name: 'Student Council', href: '/council', desc: 'Student leadership' },
-      { name: 'Our Faculty', href: '/faculty', desc: 'The people who teach' },
+      { name: 'Our Story', href: '/about' },
+      { name: 'Vision & Mission', href: '/vision' },
+      { name: 'Desk Messages', href: '/desk-messages' },
+      { name: 'Student Council', href: '/council' },
+      { name: 'Our Faculty', href: '/faculty' },
     ],
   },
   {
     name: 'Academics',
     href: '/academics',
+    shape: 'book',
+    color: 'text-green',
     children: [
-      { name: 'Academic Programmes', href: '/academics', desc: 'Nursery to Class XII' },
-      { name: 'Academic Calendar', href: '/calendar', desc: 'Key dates this session' },
+      { name: 'Academic Programmes', href: '/academics' },
+      { name: 'Senior Secondary Streams', href: '/academics#curriculum' },
+      { name: 'Academic Calendar', href: '/calendar' },
+      { name: 'Mandatory Disclosure', href: '/mandatory-disclosure' },
     ],
   },
-  { name: 'Admissions', href: '/admissions' },
-];
-
-const rightLinks: NavItem[] = [
+  {
+    name: 'Admissions',
+    href: '/admissions',
+    shape: 'chevrons',
+    color: 'text-pink',
+    children: [
+      { name: 'Admissions 2026–27', href: '/admissions' },
+      { name: 'Visit the Campus', href: '/contact' },
+      { name: 'Careers at GNS', href: '/careers' },
+    ],
+  },
   {
     name: 'Campus Life',
     href: '/facilities',
+    shape: 'pyramid',
+    color: 'text-yellow',
     children: [
-      { name: 'Facilities', href: '/facilities', desc: 'Classrooms, labs, sports' },
-      { name: 'Activities', href: '/activities', desc: 'Clubs & co-curriculars' },
-      { name: 'Hostel Life', href: '/hostel-life', desc: 'Std. I to XII' },
-      { name: 'Gallery', href: '/gallery', desc: 'Moments from campus' },
-      { name: 'Alumni', href: '/alumni', desc: 'GYANOBA network' },
+      { name: 'Facilities', href: '/facilities' },
+      { name: 'Activities', href: '/activities' },
+      { name: 'Hostel Life', href: '/hostel-life' },
+      { name: 'Gallery', href: '/gallery' },
     ],
   },
-  { name: 'News & Events', href: '/news-events' },
-  { name: 'Contact Us', href: '/contact' },
+  {
+    name: 'Community',
+    href: '/news-events',
+    shape: 'clover',
+    color: 'text-coral',
+    children: [
+      { name: 'News & Events', href: '/news-events' },
+      { name: 'Alumni (GYANOBA)', href: '/alumni' },
+      { name: 'Contact Us', href: '/contact' },
+    ],
+  },
 ];
 
-const topBarLinks = [
-  { name: 'Mandatory Disclosure', href: '/mandatory-disclosure', external: false },
-  { name: 'Pay Fees', href: 'https://student.schoolcanvas.com/', external: true },
-  { name: 'ERP Login', href: 'https://student.schoolcanvas.com/', external: true },
-  { name: 'Careers', href: '/careers', external: false },
+const utility = [
+  { name: 'ERP Login', href: 'https://student.schoolcanvas.com/', icon: UserRound },
+  { name: 'Pay Fees', href: 'https://student.schoolcanvas.com/', icon: CreditCard },
 ];
-
-const linkBase =
-  "relative inline-flex items-center gap-1 py-2 text-[12px] font-extrabold uppercase tracking-[0.14em] transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:bg-red after:transition-all after:duration-300";
-
-function DesktopItem({ item, pathname, align = 'left' }: { item: NavItem; pathname: string; align?: 'left' | 'right' }) {
-  const isActive =
-    pathname === item.href || (item.children?.some((c) => pathname === c.href) ?? false);
-  const cls = `${linkBase} ${
-    isActive ? 'text-red after:w-full' : 'text-dark hover:text-red after:w-0 hover:after:w-full'
-  }`;
-
-  if (!item.children) {
-    return (
-      <li>
-        <Link href={item.href} className={cls} aria-current={pathname === item.href ? 'page' : undefined}>
-          {item.name}
-        </Link>
-      </li>
-    );
-  }
-
-  return (
-    <li className="group relative">
-      <Link href={item.href} className={cls} aria-haspopup="true">
-        {item.name}
-        <ChevronDown
-          size={13}
-          strokeWidth={3}
-          className="transition-transform duration-300 group-hover:rotate-180 group-focus-within:rotate-180"
-        />
-      </Link>
-      <div className={`invisible absolute top-full z-50 w-64 translate-y-2 pt-4 ${align === 'left' ? '-left-4' : '-right-4'} opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100`}>
-        <ul className="overflow-hidden rounded-2xl border border-black/5 bg-white p-2 shadow-[0_24px_60px_-12px_rgba(15,23,42,0.28)]">
-          {item.children.map((c) => (
-            <li key={c.href}>
-              <Link
-                href={c.href}
-                className={`flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-red/5 ${
-                  pathname === c.href ? 'bg-red/5' : ''
-                }`}
-              >
-                <span className="text-[13px] font-bold text-navy">{c.name}</span>
-                {c.desc && <span className="text-[11.5px] text-gray-500">{c.desc}</span>}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </li>
-  );
-}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close drawer on route change
   useEffect(() => {
-    const t = setTimeout(() => {
-      setMobileOpen(false);
-      setOpenGroup(null);
-    }, 0);
+    const t = setTimeout(() => setOpen(false), 0);
     return () => clearTimeout(t);
   }, [pathname]);
 
-  // Lock body scroll + Esc to close while drawer is open
   useEffect(() => {
-    if (!mobileOpen) return;
+    if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMobileOpen(false);
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
     };
-  }, [mobileOpen]);
+  }, [open]);
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 flex flex-col">
-      {/* Top utility bar */}
+    <header className="fixed inset-x-0 top-0 z-50">
       <div
-        className={`hidden md:block w-full overflow-hidden bg-navy text-[10.5px] font-bold uppercase tracking-[0.16em] text-white transition-all duration-300 ${
-          scrolled ? 'h-0' : 'h-[36px]'
+        className={`flex items-stretch justify-between transition-all duration-500 ${
+          scrolled ? 'bg-white shadow-[0_10px_40px_-18px_rgba(0,39,99,0.45)]' : 'bg-transparent md:px-[15px] md:pt-[15px]'
         }`}
       >
-        <div className="mx-auto flex h-full max-w-[1400px] items-center justify-between px-6">
-          <span className="hidden text-white/60 md:block">Gyan Niketan School · Patna · Est. 1986</span>
-          <ul className="ml-auto flex items-center gap-6 md:gap-7">
-            {topBarLinks.map((l) => (
-              <li key={l.name}>
-                <Link
-                  href={l.href}
-                  {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="inline-flex items-center gap-1 transition-colors hover:text-gold"
-                >
-                  {l.name}
-                  {l.external && <ArrowUpRight size={11} strokeWidth={3} />}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        {/* Brand */}
+        <Link
+          href="/"
+          aria-label="Gyan Niketan School — home"
+          className={`flex items-center gap-3 px-5 transition-all duration-500 sm:gap-4 md:px-8 ${scrolled ? 'py-2.5' : 'py-5 md:py-7'}`}
+        >
+          <Image
+            src="/logo.png"
+            alt=""
+            width={64}
+            height={64}
+            priority
+            className={`rounded-full bg-white object-contain p-1 shadow-md transition-all duration-500 ${
+              scrolled ? 'h-11 w-11' : 'h-12 w-12 md:h-16 md:w-16'
+            }`}
+          />
+          <span
+            className={`font-semibold leading-[1.15] transition-colors duration-500 ${
+              scrolled ? 'text-navy' : 'text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.35)]'
+            } text-[15px] md:text-[19px]`}
+          >
+            Gyan Niketan
+            <br />
+            School, Patna
+          </span>
+        </Link>
+
+        {/* Utility box */}
+        <div
+          className={`flex items-center gap-1 bg-white px-3 transition-all duration-500 sm:px-5 md:gap-2 md:px-8 ${
+            scrolled ? '' : 'md:h-[92px] md:self-start'
+          }`}
+        >
+          {utility.map((u) => (
+            <span key={u.name} className="hidden items-center lg:flex">
+              <a
+                href={u.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-2 text-[13px] font-semibold uppercase tracking-[0.14em] text-ink transition-colors hover:text-blue"
+              >
+                <u.icon size={17} strokeWidth={1.8} />
+                {u.name}
+              </a>
+              <span aria-hidden className="mx-2 h-5 w-px bg-ink/30" />
+            </span>
+          ))}
+          <a
+            href={school.phoneHref}
+            aria-label={`Call ${school.phone}`}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-mist text-ink transition-colors hover:bg-blue hover:text-white lg:hidden"
+          >
+            <Phone size={16} />
+          </a>
+          <button
+            onClick={() => setOpen(true)}
+            aria-expanded={open}
+            aria-controls="site-menu"
+            className="group inline-flex items-center gap-3 px-3 py-3 text-[13px] font-semibold uppercase tracking-[0.18em] text-ink transition-colors hover:text-blue"
+          >
+            <span className="flex w-[22px] flex-col gap-[5px]" aria-hidden>
+              <span className="h-[2px] w-full bg-current" />
+              <span className="h-[2px] w-full bg-current transition-all group-hover:w-2/3" />
+              <span className="h-[2px] w-full bg-current" />
+            </span>
+            Menu
+          </button>
         </div>
       </div>
 
-      {/* Main bar */}
-      <nav
-        aria-label="Primary"
-        className={`w-full border-b border-black/5 transition-all duration-300 ${
-          scrolled ? 'bg-white py-1 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)]' : 'bg-white/95 py-3 backdrop-blur-md'
-        }`}
-      >
-        <div className="relative mx-auto flex h-[64px] max-w-[1400px] items-center justify-between px-6 lg:justify-center">
-          <button
-            className="-ml-2 p-2 text-dark lg:hidden"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={mobileOpen}
-          >
-            <Menu size={28} />
-          </button>
-
-          <ul className="absolute left-6 hidden items-center gap-9 lg:flex xl:gap-11">
-            {leftLinks.map((l) => (
-              <DesktopItem key={l.name} item={l} pathname={pathname} />
-            ))}
-          </ul>
-
-          <Link
-            href="/"
-            aria-label="Gyan Niketan School — home"
-            className={`z-50 flex origin-center items-center justify-center transition-transform duration-500 ${
-              scrolled ? 'scale-[0.82]' : 'scale-100'
-            }`}
-          >
-            <Image
-              src="/logo.png"
-              alt="Gyan Niketan School logo"
-              width={84}
-              height={84}
-              priority
-              className="rounded-full border border-gray-100 bg-white object-contain p-1 shadow-md"
-            />
-          </Link>
-
-          <ul className="absolute right-6 hidden items-center gap-9 lg:flex xl:gap-11">
-            {rightLinks.map((l) => (
-              <DesktopItem key={l.name} item={l} pathname={pathname} align="right" />
-            ))}
-          </ul>
-
-          <div className="w-10 lg:hidden" />
-        </div>
-      </nav>
-
-      {/* Mobile drawer */}
+      {/* Full-screen menu */}
       <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-[100] bg-navy/70 backdrop-blur-sm"
-            />
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-label="Menu"
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed left-0 top-0 z-[110] flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-white shadow-2xl"
-            >
-              <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50 p-5">
-                <Image src="/logo.png" alt="Gyan Niketan School" width={52} height={52} />
+        {open && (
+          <motion.div
+            id="site-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            initial={{ clipPath: 'inset(0 0 100% 0)' }}
+            animate={{ clipPath: 'inset(0 0 0% 0)' }}
+            exit={{ clipPath: 'inset(0 0 100% 0)' }}
+            transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-[120] overflow-y-auto bg-navy text-white"
+          >
+            {/* decorative shapes */}
+            <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+              <Shape name="quarters" className="absolute -bottom-24 -right-24 h-[380px] w-[380px] text-blue/60" />
+              <Shape name="chevrons" className="absolute bottom-20 right-[340px] hidden h-24 w-24 text-yellow lg:block" />
+              <Shape name="ring" className="absolute -bottom-20 -left-20 h-48 w-48 text-purple/50" />
+            </div>
+
+            <div className="relative mx-auto flex min-h-full max-w-[1400px] flex-col px-6 pb-14 md:px-12">
+              <div className="flex items-center justify-between py-6 md:py-8">
+                <Link href="/" className="flex items-center gap-4" onClick={() => setOpen(false)}>
+                  <Image src="/logo.png" alt="" width={56} height={56} className="h-14 w-14 rounded-full bg-white p-1" />
+                  <span className="text-lg font-semibold leading-tight">
+                    Gyan Niketan
+                    <br />
+                    School, Patna
+                  </span>
+                </Link>
                 <button
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-full p-2 text-gray-500 hover:text-red"
-                  aria-label="Close menu"
+                  ref={closeRef}
+                  onClick={() => setOpen(false)}
+                  className="group inline-flex items-center gap-3 text-[13px] font-semibold uppercase tracking-[0.18em] text-white/80 hover:text-yellow"
                 >
-                  <X size={24} />
+                  Close
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/30 transition-colors group-hover:border-yellow">
+                    <X size={20} />
+                  </span>
                 </button>
               </div>
 
-              <div className="flex flex-col py-2">
-                {[...leftLinks, ...rightLinks].map((item) =>
-                  item.children ? (
-                    <div key={item.name} className="border-b border-gray-100">
-                      <button
-                        onClick={() => setOpenGroup(openGroup === item.name ? null : item.name)}
-                        aria-expanded={openGroup === item.name}
-                        className="flex w-full items-center justify-between px-6 py-4 text-left text-[13px] font-extrabold uppercase tracking-wider text-dark"
-                      >
-                        {item.name}
-                        <ChevronDown
-                          size={16}
-                          className={`text-gray-400 transition-transform ${openGroup === item.name ? 'rotate-180' : ''}`}
-                        />
-                      </button>
-                      <AnimatePresence initial={false}>
-                        {openGroup === item.name && (
-                          <motion.ul
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25 }}
-                            className="overflow-hidden bg-gray-50"
-                          >
-                            {item.children.map((c) => (
-                              <li key={c.href}>
-                                <Link
-                                  href={c.href}
-                                  className={`block px-10 py-3 text-sm font-semibold hover:text-red ${
-                                    pathname === c.href ? 'text-red' : 'text-gray-700'
-                                  }`}
-                                >
-                                  {c.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </motion.ul>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  ) : (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`border-b border-gray-100 px-6 py-4 text-[13px] font-extrabold uppercase tracking-wider hover:text-red ${
-                        pathname === item.href ? 'text-red' : 'text-dark'
-                      }`}
+              <div className="grid flex-1 gap-12 pt-6 lg:grid-cols-[1fr_320px] lg:gap-20 lg:pt-12">
+                <nav aria-label="Primary" className="grid gap-x-10 gap-y-12 sm:grid-cols-2 xl:grid-cols-3">
+                  {groups.map((g, gi) => (
+                    <motion.div
+                      key={g.name}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.25 + gi * 0.06, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      {item.name}
-                    </Link>
-                  )
-                )}
-              </div>
+                      <Link href={g.href} className="group mb-5 inline-flex items-center gap-3">
+                        <Shape name={g.shape} className={`h-7 w-7 ${g.color}`} />
+                        <span className="text-[28px] font-medium leading-none tracking-tight transition-colors group-hover:text-yellow md:text-[34px]">
+                          {g.name}
+                        </span>
+                      </Link>
+                      <ul className="space-y-2.5 border-l border-white/15 pl-10">
+                        {g.children.map((c) => (
+                          <li key={c.href + c.name}>
+                            <Link
+                              href={c.href}
+                              className={`text-[15px] transition-colors hover:text-yellow ${
+                                pathname === c.href ? 'text-yellow' : 'text-white/75'
+                              }`}
+                            >
+                              {c.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  ))}
+                </nav>
 
-              <div className="mt-auto flex flex-col gap-4 bg-navy p-6 text-white">
-                {topBarLinks.map((l) => (
-                  <Link
-                    key={l.name}
-                    href={l.href}
-                    {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="text-xs font-bold uppercase tracking-widest transition-colors hover:text-gold"
-                  >
-                    {l.name}
-                  </Link>
-                ))}
+                <motion.aside
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.45, duration: 0.6 }}
+                  className="space-y-8 border-t border-white/15 pt-10 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0"
+                >
+                  <div className="flex flex-wrap gap-3">
+                    <Link href="/admissions" className="btn-primary">Apply Now</Link>
+                  </div>
+                  <ul className="space-y-3">
+                    {utility.map((u) => (
+                      <li key={u.name}>
+                        <a
+                          href={u.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.16em] text-white/85 hover:text-yellow"
+                        >
+                          <u.icon size={16} /> {u.name} <ArrowUpRight size={13} />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  <ul className="space-y-4 text-[15px] text-white/75">
+                    <li className="flex gap-3">
+                      <MapPin size={18} className="mt-0.5 shrink-0 text-yellow" />
+                      <span>{school.address}</span>
+                    </li>
+                    <li className="flex gap-3">
+                      <Phone size={18} className="shrink-0 text-yellow" />
+                      <a href={school.phoneHref} className="hover:text-white">{school.phone}</a>
+                    </li>
+                    <li className="flex gap-3">
+                      <Mail size={18} className="shrink-0 text-yellow" />
+                      <a href={`mailto:${school.email}`} className="hover:text-white">{school.email}</a>
+                    </li>
+                  </ul>
+                  <div className="flex gap-3">
+                    {(
+                      [
+                        ['facebook-f', school.social.facebook, 'Facebook'],
+                        ['instagram', school.social.instagram, 'Instagram'],
+                        ['youtube', school.social.youtube, 'YouTube'],
+                      ] as const
+                    ).map(([icon, href, label]) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        className="flex h-11 w-11 items-center justify-center rounded-full border border-white/25 transition-colors hover:border-yellow hover:bg-yellow hover:text-navy"
+                      >
+                        <i className={`fa-brands fa-${icon}`} />
+                      </a>
+                    ))}
+                  </div>
+                </motion.aside>
               </div>
-            </motion.div>
-          </>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </header>

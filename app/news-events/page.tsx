@@ -38,7 +38,7 @@ export default function NewsEventsPage() {
                   <span style={{ fontSize: '1.6rem', fontFamily: 'var(--font-heading)', fontWeight: 900, color: 'var(--dark)' }}>{evt.date.split(' ')[1].replace(',', '')}</span>
                 </div>
                 <div>
-                  <span style={{ display: 'inline-block', padding: '4px 10px', background: 'rgba(225,29,46,0.1)', color: '#b01220', borderRadius: 999, fontSize: '0.75rem', fontWeight: 700, marginBottom: 12 }}>{evt.type}</span>
+                  <span style={{ display: 'inline-block', padding: '4px 10px', background: 'rgba(0,100,236,0.1)', color: '#0051c4', borderRadius: 999, fontSize: '0.75rem', fontWeight: 700, marginBottom: 12 }}>{evt.type}</span>
                   <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 700, marginBottom: 8 }}>{evt.title}</h3>
                   <p style={{ color: 'var(--gray)', fontSize: '0.9rem', lineHeight: 1.6 }}>{evt.desc}</p>
                 </div>
