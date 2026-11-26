@@ -9,6 +9,9 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SideTabs from "@/components/SideTabs";
+import SmoothScroll from "@/components/fx/SmoothScroll";
+import Cursor from "@/components/fx/Cursor";
+import ScrollProgress from "@/components/fx/ScrollProgress";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import Preloader from "@/components/Preloader";
 import Providers from "@/components/Providers";
@@ -114,6 +117,9 @@ export default function RootLayout({
         <Providers>
           <a href="#main" className="skip-link">Skip to content</a>
           <Preloader />
+          <SmoothScroll />
+          <ScrollProgress />
+          <Cursor />
           <Navbar />
           <main id="main">{children}</main>
           <Footer />

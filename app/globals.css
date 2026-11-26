@@ -2222,3 +2222,28 @@ main section [style*="border-radius:20px"], main section [style*="border-radius:
 
 /* Side tabs (Visit / Apply) */
 .side-tab { writing-mode: vertical-rl; }
+
+/* ===================================================
+   THEME v3 — motion layer
+   =================================================== */
+html.has-cursor, html.has-cursor * { cursor: none !important; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+.text-outline { color: transparent; -webkit-text-stroke: 2px var(--navy); }
+.text-outline svg { -webkit-text-stroke: 0; }
+@media (max-width: 768px) { .text-outline { -webkit-text-stroke-width: 1.2px; } }
+
+/* Inner page hero: shapes float, title rises */
+@keyframes float-a { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-18px) rotate(8deg); } }
+@keyframes float-b { 0%,100% { transform: translateY(0) rotate(180deg); } 50% { transform: translateY(14px) rotate(170deg); } }
+@keyframes hero-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.page-hero { animation: hero-wipe 1.1s cubic-bezier(.77,0,.175,1) both; }
+.page-hero::after { animation: float-a 6s ease-in-out infinite; }
+.page-hero::before { animation: float-b 8s ease-in-out infinite; }
+.page-hero .hero-shape:nth-child(1) { animation: float-a 7s ease-in-out infinite; }
+.page-hero .hero-shape:nth-child(2) { animation: float-a 5s ease-in-out -2s infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .page-hero, .page-hero::after, .page-hero::before, .page-hero .hero-shape { animation: none !important; }
+}
