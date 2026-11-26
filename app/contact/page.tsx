@@ -51,7 +51,7 @@ export default function ContactPage() {
                   { icon: 'fa-clock', title: 'Office Hours', info: 'Mon–Fri: 8 AM – 4 PM | Sat: 8 AM – 12:30 PM', href: null },
                 ].map((c, i) => (
                   <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                    <div style={{ width: 48, height: 48, background: 'rgba(225,29,46,0.1)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red)', fontSize: '1rem', flexShrink: 0 }}>
+                    <div style={{ width: 48, height: 48, background: 'rgba(0,100,236,0.1)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--red)', fontSize: '1rem', flexShrink: 0 }}>
                       <i className={`fas ${c.icon}`}></i>
                     </div>
                     <div>

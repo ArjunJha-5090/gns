@@ -1,119 +1,169 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, ArrowUp } from 'lucide-react';
+import { ArrowUp, Home, Smartphone, Map, Mail, MapPin, PenSquare, UserRound } from 'lucide-react';
+import Shape from '@/components/Shape';
 import NewsletterForm from '@/components/NewsletterForm';
 import { school } from '@/lib/site-data';
 
+const useful = [
+  { name: 'Admissions 2026–27', href: '/admissions' },
+  { name: 'Academic Calendar', href: '/calendar' },
+  { name: 'Mandatory Disclosure', href: '/mandatory-disclosure' },
+  { name: 'Current Openings', href: '/careers' },
+  { name: 'Alumni (GYANOBA)', href: '/alumni' },
+];
+
+const explore = [
+  { name: 'Our Story', href: '/about' },
+  { name: 'Academics', href: '/academics' },
+  { name: 'Facilities', href: '/facilities' },
+  { name: 'Hostel Life', href: '/hostel-life' },
+  { name: 'Gallery', href: '/gallery' },
+];
+
+const RING = 'BACK TO TOP · BACK TO TOP · BACK TO TOP · ';
+
 export default function Footer() {
-  const quickLinks = [
-    { name: 'About Us', href: '/about' },
-    { name: 'Admissions', href: '/admissions' },
-    { name: 'Tour', href: '/#tour' },
-    { name: 'Mandatory Disclosure', href: '/mandatory-disclosure' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Contact Us', href: '/contact' }
-  ];
-
-  const academicLinks = [
-    { name: 'Preschool', href: '/academics#preschool' },
-    { name: 'Primary School', href: '/academics#primary' },
-    { name: 'Middle School', href: '/academics#middle' },
-    { name: 'Secondary School', href: '/academics#secondary' },
-    { name: 'Senior Secondary', href: '/academics#senior' },
-    { name: 'Curriculum', href: '/academics#curriculum' }
-  ];
-
   return (
-    <footer className="bg-navy pt-20 pb-10 border-t-4 border-red font-sans relative">
-      
-      {/* Scroll to Top Button */}
-      <a href="#main" aria-label="Back to top" className="absolute -top-6 left-1/2 -translate-x-1/2 bg-red w-12 h-12 rounded-full flex items-center justify-center text-white hover:bg-gold hover:-translate-y-2 transition-all shadow-lg border-4 border-white">
-        <ArrowUp size={20} strokeWidth={3} />
-      </a>
+    <footer className="frame mt-0 pb-[15px]">
+      <div className="relative isolate overflow-hidden bg-gradient-to-br from-[#003a85] via-navy to-navy-deep text-white">
+        {/* green arcs */}
+        <div aria-hidden className="absolute left-0 top-0 -z-10 hidden h-full w-[16%] flex-col md:flex">
+          <div className="flex-1 rounded-tr-[100%] bg-green" />
+          <div className="mt-3 flex-1 rounded-tr-[100%] bg-green" />
+        </div>
 
-      <div className="max-w-[1400px] mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
-          
-          {/* Col 1: Brand & Contact Info */}
-          <div>
-            <div className="bg-white inline-block p-2 rounded-lg mb-6 shadow-sm">
-              <Image src="/logo.png" alt="Gyan Niketan" width={100} height={100} className="object-contain" />
-            </div>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6 font-medium">
-              Global Minds Indian Hearts. Gyan Niketan School provides world-class education rooted in traditional values.
-            </p>
-            <ul className="space-y-4 text-gray-400 text-sm">
-              <li className="flex gap-3">
-                <MapPin className="text-red shrink-0" size={18} />
-                <span>Vitthal Vihar Complex, Ranjan Path, Gola Road (Danapur Cantt.), Patna, Bihar 801503</span>
-              </li>
-              <li className="flex gap-3">
-                <Phone className="text-red shrink-0" size={18} />
-                <a href="tel:06115235117" className="hover:text-gold transition-colors">06115-235117</a>
-              </li>
-              <li className="flex gap-3">
-                <Mail className="text-red shrink-0" size={18} />
-                <a href="mailto:gnspatna@rediffmail.com" className="hover:text-gold transition-colors">gnspatna@rediffmail.com</a>
-              </li>
-            </ul>
+        <div className="mx-auto max-w-[1340px] px-6 pb-16 pt-20 sm:px-12 md:pl-[19%] md:pr-12 lg:pl-[17%]">
+          <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
+            <Link href="/" className="flex items-center gap-5">
+              <Image src="/logo.png" alt="" width={84} height={84} className="h-20 w-20 rounded-full bg-white p-1.5" />
+              <span className="text-[1.9rem] font-semibold leading-[1.1] md:text-[2.2rem]">
+                Gyan Niketan
+                <br />
+                School, Patna
+              </span>
+            </Link>
+
+            {/* back to top */}
+            <a href="#main" aria-label="Back to top" className="group relative hidden h-32 w-32 shrink-0 lg:block">
+              <svg viewBox="0 0 100 100" className="spin-slow h-full w-full" aria-hidden>
+                <defs>
+                  <path id="ft-ring" d="M50 50 m-40 0 a40 40 0 1 1 80 0 a40 40 0 1 1 -80 0" />
+                </defs>
+                <text fontSize="8.6" fontWeight="600" letterSpacing="2.4" fill="currentColor">
+                  <textPath href="#ft-ring">{RING}</textPath>
+                </text>
+              </svg>
+              <ArrowUp size={40} strokeWidth={1.8} className="absolute inset-0 m-auto transition-transform duration-300 group-hover:-translate-y-1.5" />
+            </a>
           </div>
 
-          {/* Col 2: Quick Links */}
-          <div>
-            <h2 className="text-white font-bold text-lg mb-6 font-poppins relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-1/2 after:h-0.5 after:bg-red">Quick Links</h2>
-            <ul className="space-y-3">
-              {quickLinks.map(link => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-gray-400 text-sm hover:text-gold hover:translate-x-1 transition-all inline-flex items-center gap-2 before:content-['›'] before:text-red before:font-bold">
-                    {link.name}
-                  </Link>
+          <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_1.05fr_0.85fr_1.3fr] lg:gap-10">
+            <div>
+              <h2 className="mb-7 text-[13px] font-semibold uppercase tracking-[0.2em]">Contact details</h2>
+              <ul className="space-y-5 text-[15px] text-white/90">
+                <li className="flex gap-4">
+                  <Home size={19} className="mt-0.5 shrink-0 text-yellow" strokeWidth={1.6} />
+                  <span className="leading-relaxed">{school.address}</span>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 3: Academics */}
-          <div>
-            <h2 className="text-white font-bold text-lg mb-6 font-poppins relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-1/2 after:h-0.5 after:bg-red">Academics</h2>
-            <ul className="space-y-3">
-              {academicLinks.map(link => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-gray-400 text-sm hover:text-gold hover:translate-x-1 transition-all inline-flex items-center gap-2 before:content-['›'] before:text-red before:font-bold">
-                    {link.name}
-                  </Link>
+                <li className="flex gap-4">
+                  <Smartphone size={19} className="shrink-0 text-yellow" strokeWidth={1.6} />
+                  <a href={school.phoneHref} className="border-b border-white/60 hover:border-yellow hover:text-yellow">{school.phone}</a>
                 </li>
-              ))}
-            </ul>
+                <li className="flex gap-4">
+                  <Mail size={19} className="shrink-0 text-yellow" strokeWidth={1.6} />
+                  <a href={`mailto:${school.email}`} className="break-words hover:text-yellow">{school.email}</a>
+                </li>
+                <li className="flex gap-4">
+                  <Map size={19} className="shrink-0 text-yellow" strokeWidth={1.6} />
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Gyan+Niketan+School+Patna"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-yellow"
+                  >
+                    Find us on Google Maps
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="mb-7 text-[13px] font-semibold uppercase tracking-[0.2em]">Useful links</h2>
+              <ul className="space-y-3.5 text-[15px] text-white/90">
+                {useful.map((l) => (
+                  <li key={l.name}>
+                    <Link href={l.href} className="transition-colors hover:text-yellow">{l.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="mb-7 text-[13px] font-semibold uppercase tracking-[0.2em]">Explore</h2>
+              <ul className="space-y-3.5 text-[15px] text-white/90">
+                {explore.map((l) => (
+                  <li key={l.name}>
+                    <Link href={l.href} className="transition-colors hover:text-yellow">{l.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <ul className="mb-9 space-y-4">
+                {[
+                  { name: 'Visit', href: '/contact', icon: MapPin },
+                  { name: 'Apply', href: '/admissions', icon: PenSquare },
+                  { name: 'ERP Login', href: 'https://student.schoolcanvas.com/', icon: UserRound, ext: true },
+                ].map((l) => (
+                  <li key={l.name}>
+                    <Link
+                      href={l.href}
+                      {...(l.ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="inline-flex items-center gap-4 text-[14px] font-semibold uppercase tracking-[0.2em] hover:text-yellow"
+                    >
+                      <l.icon size={22} strokeWidth={1.6} className="text-yellow" /> {l.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <p className="mb-3 text-[13px] text-white/70">Subscribe to our newsletter</p>
+              <NewsletterForm />
+            </div>
           </div>
 
-          {/* Col 4: Newsletter & Social */}
-          <div>
-            <h2 className="text-white font-bold text-lg mb-6 font-poppins relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-1/2 after:h-0.5 after:bg-red">Connect With Us</h2>
-            <p className="text-gray-400 text-sm mb-4">Subscribe to our newsletter for the latest updates.</p>
-            <NewsletterForm />
-            
-            <div className="flex gap-4">
-              <a href={school.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-10 h-10 rounded-full bg-[#2a2c2e] text-white flex items-center justify-center hover:bg-[#1877f2] transition-colors">
-                <i className="fa-brands fa-facebook-f"></i>
-              </a>
-              <a href={school.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-[#2a2c2e] text-white flex items-center justify-center hover:bg-[#e4405f] transition-colors">
-                <i className="fa-brands fa-instagram"></i>
-              </a>
-              <a href={school.social.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-10 h-10 rounded-full bg-[#2a2c2e] text-white flex items-center justify-center hover:bg-[#ff0000] transition-colors">
-                <i className="fa-brands fa-youtube"></i>
-              </a>
-            </div>
+          {/* shape row */}
+          <div aria-hidden className="mt-6 flex flex-wrap items-center gap-4 md:justify-end">
+            <Shape name="bars" className="h-10 w-10 text-purple" />
+            <Shape name="steps" className="h-10 w-10 text-pink" />
+            <Shape name="bowtie" className="h-10 w-10 text-blue" />
+            <Shape name="pyramid" className="h-10 w-10 text-yellow" />
+            <Shape name="chevrons" className="h-10 w-10 text-green" />
+            <Shape name="clover" className="h-10 w-10 text-coral" />
           </div>
         </div>
 
-        {/* Copyright Bar */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-          <p className="text-gray-400 text-xs tracking-wider">
-            © {new Date().getFullYear()} Gyan Niketan School. All Rights Reserved.
-          </p>
-          <div className="flex gap-6 text-gray-400 text-xs tracking-wider">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+        {/* bottom bar */}
+        <div className="bg-navy-deep/80">
+          <div className="mx-auto flex max-w-[1300px] flex-col items-center justify-between gap-6 px-6 py-7 text-center md:flex-row md:text-left">
+            <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[12px] font-semibold uppercase tracking-[0.18em]">
+              <li><Link href="/sitemap.xml" className="hover:text-yellow">Site map</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-yellow">Privacy policy</Link></li>
+              <li><Link href="/terms" className="hover:text-yellow">Terms of service</Link></li>
+              <li className="font-normal normal-case tracking-normal text-white/60">© {new Date().getFullYear()} Gyan Niketan School</li>
+            </ul>
+            <div className="flex items-center gap-6 text-lg">
+              <a href={school.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-yellow">
+                <i className="fa-brands fa-instagram" />
+              </a>
+              <a href={school.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-yellow">
+                <i className="fa-brands fa-facebook-f" />
+              </a>
+              <a href={school.social.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-yellow">
+                <i className="fa-brands fa-youtube" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

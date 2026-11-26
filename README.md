@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gyan Niketan School, Patna — website
 
-## Getting Started
+Static Next.js site (`output: "export"`): pure HTML/CSS/JS, no server or database.
 
-First, run the development server:
+## Run locally
+
+Requires Node.js 20.9 or newer.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+The static site is written to `out/`.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy to Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Push this repository to GitHub.
+2. On [vercel.com](https://vercel.com), choose **Add New → Project** and import the repository.
+3. Leave the detected settings as they are (framework **Next.js**; install, build and headers come from `vercel.json`) and click **Deploy**.
+4. Optional: under **Settings → Environment Variables**, set `NEXT_PUBLIC_SITE_URL` to your live domain (for example `https://gyanniketan.in`) so the sitemap, robots.txt and social previews use it. It defaults to `https://gyanniketan.in`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Every push to the production branch redeploys automatically; other branches get preview URLs.
 
-## Deploy on Vercel
+## Where things live
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `lib/site-data.ts` — contact details, social links and events (homepage and News & Events)
+- `app/page.tsx` and `components/home/` — homepage sections
+- `components/Navbar.tsx`, `components/Footer.tsx` — header, menu and footer
+- `app/globals.css` — theme colours, fonts and shared styles
+- `public/` — images

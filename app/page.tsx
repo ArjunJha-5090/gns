@@ -1,262 +1,218 @@
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, BookOpen, Building2, Trophy, GraduationCap, Globe2, Languages, Cpu, MonitorPlay, Phone, CalendarDays, Landmark, Users, BedDouble } from 'lucide-react';
+import { ArrowUpRight, Phone } from 'lucide-react';
 
 import HeroSlider from '@/components/HeroSlider';
 import Reveal from '@/components/Reveal';
+import Shape, { type ShapeName } from '@/components/Shape';
+import FocusCarousel from '@/components/home/FocusCarousel';
+import StoriesTabs from '@/components/home/StoriesTabs';
+import FactsCarousel from '@/components/home/FactsCarousel';
+import DiscoverTabs from '@/components/home/DiscoverTabs';
+import JourneyScroller from '@/components/home/JourneyScroller';
+import Marquee from '@/components/fx/Marquee';
+import ScrollWords, { type Token } from '@/components/fx/ScrollWords';
+import ScrollShape from '@/components/fx/ScrollShape';
+import Magnetic from '@/components/fx/Magnetic';
+import TiltCard from '@/components/fx/TiltCard';
+import SplitOnView from '@/components/fx/SplitOnView';
 import { events, school } from '@/lib/site-data';
 
-const facts = [
-  { icon: Landmark, value: '1986', label: 'Established' },
-  { icon: BookOpen, value: 'CBSE', label: 'Affiliated, New Delhi' },
-  { icon: Users, value: 'Nursery – XII', label: 'Classes offered' },
-  { icon: BedDouble, value: 'Std. I – XII', label: 'Hostel facilities' },
+const typeStyle: Record<string, { bg: string; fg: string; shape: ShapeName }> = {
+  Event: { bg: 'bg-purple', fg: 'text-white', shape: 'quarters' },
+  Academic: { bg: 'bg-green', fg: 'text-white', shape: 'book' },
+  Sports: { bg: 'bg-coral', fg: 'text-white', shape: 'bars' },
+  Notice: { bg: 'bg-yellow', fg: 'text-navy', shape: 'chevrons' },
+};
+
+function Inline({ name, className }: { name: ShapeName; className: string }) {
+  return <Shape name={name} className={`inline-block h-[0.82em] w-[0.82em] -translate-y-[0.06em] align-middle ${className}`} />;
+}
+
+const intro: Token[] = [
+  'We', 'are', 'a', 'CBSE-affiliated,', 'English-medium', 'school',
+  <Inline key="a" name="bowtie" className="text-blue" />,
+  'in', 'Patna', <Inline key="b" name="circle" className="text-pink" />,
+  'for', 'students', <Inline key="c" name="triangle" className="text-coral" />,
+  'from', 'Nursery', 'to', 'Class', 'XII', <Inline key="d" name="steps" className="text-purple" />,
+  'offering', 'a', 'holistic,', 'value-based', <Inline key="e" name="book" className="text-green" />,
+  'education', 'to', 'young', 'minds', <Inline key="f" name="arch" className="text-yellow" />, 'since', '1986.',
 ];
 
-const pillars = [
-  { title: 'Academics', href: '/academics', icon: BookOpen, text: 'Rigorous CBSE curriculum, Nursery to Class XII.' },
-  { title: 'Facilities', href: '/facilities', icon: Building2, text: 'Smart classrooms, library, sports and more.' },
-  { title: 'Activities', href: '/activities', icon: Trophy, text: 'Sport, arts and clubs that build character.' },
-  { title: 'Alumni', href: '/alumni', icon: GraduationCap, text: 'GYANOBA — a lifelong Gyan Niketan family.' },
+const marqueeA = [
+  { text: 'Global Minds', shape: 'chevrons' as const, color: 'text-yellow' },
+  { text: 'Indian Hearts', shape: 'quarters' as const, color: 'text-pink' },
+  { text: 'Since 1986', shape: 'ring' as const, color: 'text-green' },
+  { text: 'Nursery to XII', shape: 'clover' as const, color: 'text-coral' },
 ];
 
-const outlook = [
-  { icon: Languages, title: 'English-medium learning', text: 'An English-medium school whose language department teaches English, Hindi and Sanskrit.' },
-  { icon: Cpu, title: 'Future-ready skills', text: 'A dedicated STEM lab with robotics, coding and AI programmes for 21st-century skills.' },
-  { icon: MonitorPlay, title: 'Smart classrooms', text: 'Interactive digital boards and multimedia projectors in classrooms for engaging lessons.' },
-  { icon: Globe2, title: 'A worldwide family', text: 'GYANOBA, our alumni association, connects Gyan Niketan graduates across the globe.' },
-];
-
-const explore = [
-  { title: 'Campus Gallery', href: '/gallery', img: '/gy.webp', text: 'Moments from school life' },
-  { title: 'Facilities', href: '/facilities', img: '/smart.webp', text: 'Where learning happens' },
-  { title: 'Hostel Life', href: '/hostel-life', img: '/books.webp', text: 'A home away from home' },
-  { title: 'Activities', href: '/activities', img: '/art.webp', text: 'Beyond the classroom' },
+const marqueeB = [
+  { text: 'Learn', shape: 'triangle' as const, color: 'text-coral' },
+  { text: 'Lead', shape: 'bowtie' as const, color: 'text-blue' },
+  { text: 'Inspire', shape: 'circle' as const, color: 'text-pink' },
+  { text: 'Excel', shape: 'pyramid' as const, color: 'text-yellow' },
+  { text: 'Belong', shape: 'leaf' as const, color: 'text-green' },
 ];
 
 export default function Home() {
-  const [featured, ...rest] = events;
-
   return (
     <div className="bg-white">
       <HeroSlider />
 
-      {/* Quick facts — overlaps hero */}
-      <section aria-label="School at a glance" className="relative z-10 mx-auto -mt-10 max-w-[1200px] px-4 sm:px-6 md:-mt-14">
-        <div className="grid grid-cols-2 overflow-hidden rounded-2xl bg-white shadow-[0_30px_70px_-20px_rgba(15,23,42,0.35)] lg:grid-cols-4">
-          {facts.map((f, i) => (
-            <Reveal key={f.label} delay={i * 0.08} y={20}>
-              <div className="flex h-full items-center gap-3 border-b border-r border-gray-100 p-4 last:border-r-0 sm:gap-4 sm:p-6 lg:border-b-0">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red/10 text-red sm:h-12 sm:w-12">
-                  <f.icon size={20} />
-                </span>
-                <div>
-                  <p className="font-[family-name:var(--font-display)] text-lg font-bold leading-tight text-navy sm:text-xl">{f.value}</p>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 sm:text-xs">{f.label}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+      {/* Giant velocity marquee */}
+      <section aria-label="Our motto" className="pt-16 md:pt-24">
+        <Marquee
+          items={marqueeA}
+          baseVelocity={-3}
+          className="text-[15vw] font-semibold leading-[1.05] tracking-[-0.05em] text-navy md:text-[10vw]"
+        />
       </section>
 
-
-      {/* Welcome */}
-      <section id="welcome" className="mx-auto max-w-[1400px] px-6 py-24 md:py-32">
-        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
-          <Reveal x={-40} y={0}>
-            <span className="eyebrow mb-5">About Us</span>
-            <h2 className="display-heading text-4xl md:text-5xl lg:text-[3.4rem]">
-              Welcome to <em>Gyan Niketan</em> School
-            </h2>
-            <div className="mt-8 space-y-5 text-lg leading-relaxed text-gray-600">
-              <p>
-                Gyan Niketan, meaning &lsquo;Abode of Knowledge&rsquo;, is an English medium school established in 1986 by Manaviya
-                Vibhava Vikas (M.V.V.) Nyas. We believe in holistic education rooted in Indian culture and moral values.
-              </p>
-              <p>
-                Modern infrastructure, smart classrooms and a dedicated faculty ensure our students are prepared for global
-                challenges while remaining grounded in their heritage.
-              </p>
-            </div>
-            <Link
-              href="/about"
-              className="group mt-10 inline-flex items-center gap-3 rounded-full bg-navy px-8 py-4 text-[13px] font-extrabold uppercase tracking-[0.16em] text-white transition-all hover:-translate-y-0.5 hover:bg-red"
-            >
-              Our Story <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Reveal>
-
-          <Reveal x={40} y={0} delay={0.1}>
-            <div className="relative">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] shadow-2xl">
-                <Image src="/aryan-class.webp" alt="Students in a classroom session" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover transition-transform duration-[1200ms] hover:scale-105" />
-              </div>
-              <div className="absolute -bottom-6 -left-4 rounded-2xl bg-red px-7 py-5 text-white shadow-xl md:-left-8">
-                <p className="font-[family-name:var(--font-display)] text-4xl font-bold leading-none">{new Date().getFullYear() - 1986}</p>
-                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/85">Years of legacy</p>
-              </div>
-              <div className="absolute -right-3 -top-3 -z-10 h-full w-full rounded-[28px] border-2 border-gold md:-right-5 md:-top-5" />
-            </div>
-          </Reveal>
-        </div>
-
-        <div className="mt-24 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {pillars.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.08}>
-              <Link
-                href={p.href}
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:border-transparent hover:shadow-[0_30px_60px_-20px_rgba(15,23,42,0.3)]"
-              >
-                <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-red transition-transform duration-500 group-hover:scale-x-100" />
-                <span className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-navy text-white transition-colors group-hover:bg-red">
-                  <p.icon size={26} />
-                </span>
-                <h3 className="font-[family-name:var(--font-display)] text-2xl font-bold text-navy">{p.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{p.text}</p>
-                <span className="mt-6 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-red">
-                  Learn more <ArrowUpRight size={14} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </span>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+      {/* Intro statement — words light up as you scroll */}
+      <section aria-label="Who we are" className="relative mx-auto max-w-[1400px] px-6 pb-8 pt-16 sm:px-12 md:pt-24 lg:px-[8%]">
+        <ScrollShape name="ring" className="absolute -right-10 top-0 hidden h-40 w-40 text-yellow/70 lg:block" rotate={0} y={160} />
+        <ScrollWords
+          label="We are a CBSE-affiliated, English-medium school in Patna for students from Nursery to Class XII offering a holistic, value-based education to young minds since 1986."
+          tokens={intro}
+          className="max-w-[1100px] text-[1.8rem] font-normal leading-[1.4] tracking-[-0.015em] text-ink sm:text-[2.4rem] lg:text-[3rem]"
+        />
       </section>
 
-      {/* Global outlook */}
-      <section aria-labelledby="outlook-heading" className="relative isolate overflow-hidden bg-navy py-24 md:py-28">
-        <div className="absolute -right-24 top-0 -z-10 h-80 w-80 rounded-full bg-red/20 blur-[110px]" />
-        <div className="mx-auto max-w-[1400px] px-6">
-          <Reveal className="mx-auto mb-14 max-w-3xl text-center">
-            <span className="eyebrow eyebrow--light eyebrow--center mb-5">Our Approach</span>
-            <h2 id="outlook-heading" className="display-heading !text-white text-4xl md:text-5xl [&_em]:!text-gold">
-              A global outlook, <em>rooted in India</em>
-            </h2>
-            <p className="mt-5 text-lg text-white/70">Global minds, Indian hearts — preparing students for the world while keeping them grounded in their heritage.</p>
-          </Reveal>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {outlook.map((o, i) => (
-              <Reveal key={o.title} delay={i * 0.09}>
-                <div className="h-full rounded-2xl border border-white/10 bg-white/[0.04] p-8 backdrop-blur transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:bg-white/[0.07]">
-                  <span className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/15 text-gold">
-                    <o.icon size={26} />
-                  </span>
-                  <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-white">{o.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-white/70">{o.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FocusCarousel />
 
-      {/* Explore campus */}
-      <section id="explore" className="scroll-mt-24 bg-ivory py-24 md:py-32">
-        <div className="mx-auto max-w-[1400px] px-6">
-          <Reveal className="mx-auto mb-16 max-w-2xl text-center">
-            <span className="eyebrow eyebrow--center mb-5">Discover</span>
-            <h2 className="display-heading text-4xl md:text-5xl">
-              Explore our <em>campus</em>
-            </h2>
-            <p className="mt-5 text-lg text-gray-600">See how learning, sport, creativity and community come together every day.</p>
-          </Reveal>
+      <div className="h-24 md:h-32" />
+      <JourneyScroller />
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {explore.map((e, i) => (
-              <Reveal key={e.title} delay={i * 0.09}>
-                <Link href={e.href} className="group relative block aspect-[3/4] overflow-hidden rounded-3xl">
-                  <Image src={e.img} alt={e.title} fill sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw" className="object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent transition-opacity group-hover:from-red/80" />
-                  <div className="absolute inset-x-0 bottom-0 p-7 text-white">
-                    <h3 className="font-[family-name:var(--font-display)] text-2xl font-bold">{e.title}</h3>
-                    <p className="mt-1 text-sm text-white/80">{e.text}</p>
-                    <span className="mt-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur transition-all group-hover:bg-white group-hover:text-red">
-                      <ArrowUpRight size={18} />
-                    </span>
-                  </div>
+      {/* Community stories */}
+      <section aria-label="Community stories" className="frame">
+        <div className="relative isolate overflow-hidden bg-navy">
+          <ScrollShape name="chevrons" className="absolute right-[6%] top-16 -z-10 h-28 w-28 text-green/80" rotate={90} />
+          <ScrollShape name="clover" className="absolute bottom-24 left-[42%] -z-10 hidden h-20 w-20 text-coral/80 lg:block" rotate={-180} />
+          <div className="mx-auto max-w-[1400px] px-6 pb-40 pt-28 sm:px-12 md:pb-48 lg:px-[8%]">
+            <StoriesTabs />
+            <div className="mt-20 text-center">
+              <Magnetic>
+                <Link href="/desk-messages" className="btn-primary hover:!border-white hover:!bg-white hover:!text-navy">
+                  More from our community
                 </Link>
-              </Reveal>
-            ))}
+              </Magnetic>
+            </div>
+          </div>
+          <div aria-hidden className="absolute bottom-0 left-0 text-white">
+            <Shape name="quarters" className="h-[120px] w-[120px] -translate-x-[60px] translate-y-[60px] md:h-[180px] md:w-[180px] md:-translate-x-[90px] md:translate-y-[90px]" />
           </div>
         </div>
       </section>
 
-      {/* The Blackboard */}
-      <section className="mx-auto max-w-[1400px] px-6 py-24 md:py-32">
-        <Reveal className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+      <FactsCarousel />
+
+      {/* Outline marquee, reverse direction */}
+      <section aria-hidden className="pb-20 md:pb-28">
+        <Marquee
+          items={marqueeB}
+          baseVelocity={2.5}
+          className="text-outline text-[18vw] font-semibold uppercase leading-none tracking-[-0.04em] md:text-[12vw]"
+        />
+      </section>
+
+      {/* Discover & Experience */}
+      <section aria-labelledby="discover-heading" className="frame">
+        <div className="relative overflow-hidden bg-mist px-6 py-24 sm:px-12 md:py-32 lg:px-[8%]">
+          <ScrollShape name="checker" className="absolute right-0 top-0 h-28 w-28 text-coral md:h-48 md:w-48" rotate={90} y={40} scale={[1, 1]} />
+          <p className="eyebrow mb-5">Life at Gyan Niketan</p>
+          <h2 id="discover-heading" className="mb-12 text-[2.7rem] font-semibold leading-[1.05] tracking-[-0.03em] text-navy sm:text-6xl lg:text-[4.6rem]">
+            <SplitOnView text="Discover & Experience" />
+          </h2>
+          <DiscoverTabs />
+        </div>
+      </section>
+
+      {/* News & events */}
+      <section aria-labelledby="news-heading" className="mx-auto max-w-[1400px] px-6 py-24 sm:px-12 md:py-32">
+        <div className="mb-14 flex flex-col items-start justify-between gap-8 md:flex-row md:items-end">
           <div>
-            <span className="eyebrow mb-5">Updates</span>
-            <h2 className="display-heading text-4xl md:text-5xl">
-              The <em>Blackboard</em>
+            <p className="eyebrow mb-5">Stay up to date</p>
+            <h2 id="news-heading" className="text-[2.7rem] font-semibold leading-[1.05] tracking-[-0.03em] text-navy sm:text-6xl lg:text-[4.6rem]">
+              <SplitOnView text="News & Events" />
             </h2>
           </div>
-          <Link href="/news-events" className="group inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-navy transition-colors hover:text-red">
-            View all news <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-          </Link>
-        </Reveal>
-
-        <div className="grid gap-8 lg:grid-cols-3">
-          <Reveal className="lg:col-span-2">
-            <Link href="/news-events" className="group relative block h-[420px] overflow-hidden rounded-3xl">
-              <Image src="/smart.webp" alt={featured.title} fill sizes="(min-width:1024px) 66vw, 100vw" className="object-cover transition-transform duration-[1200ms] group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/30 to-transparent" />
-              <div className="absolute bottom-0 left-0 w-full p-8 md:p-10">
-                <span className="mb-4 inline-block rounded-full bg-red px-4 py-1.5 text-[11px] font-extrabold uppercase tracking-widest text-white">{featured.type}</span>
-                <h3 className="font-[family-name:var(--font-display)] text-3xl font-bold text-white md:text-4xl">{featured.title}</h3>
-                <p className="mt-3 max-w-xl text-white/80">{featured.desc}</p>
-                <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-gold"><CalendarDays size={16} /> {featured.date}</p>
-              </div>
-            </Link>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <div className="flex h-full flex-col rounded-3xl border border-gray-100 bg-ivory p-8">
-              <h3 className="mb-6 border-b border-gray-200 pb-4 font-[family-name:var(--font-display)] text-2xl font-bold text-navy">Recent notices</h3>
-              <ul className="flex-1 space-y-5">
-                {rest.map((n) => {
-                  const d = new Date(n.date);
-                  return (
-                    <li key={n.title}>
-                      <Link href="/news-events" className="group flex gap-4">
-                        <span className="flex min-w-[62px] flex-col items-center justify-center rounded-xl border border-gray-100 bg-white p-2 text-center shadow-sm transition-colors group-hover:border-red group-hover:bg-red">
-                          <span className="text-xl font-black leading-none text-navy group-hover:text-white">{String(d.getDate()).padStart(2, '0')}</span>
-                          <span className="text-[10px] font-bold uppercase text-gray-500 group-hover:text-white/85">{d.toLocaleString('en', { month: 'short' })}</span>
-                        </span>
-                        <span className="pt-0.5">
-                          <span className="block text-sm font-bold leading-snug text-navy transition-colors group-hover:text-red">{n.title}</span>
-                          <span className="mt-0.5 block text-xs text-gray-500">{n.type}</span>
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </Reveal>
+          <Magnetic>
+            <Link href="/news-events" className="btn-outline">All news &amp; events</Link>
+          </Magnetic>
         </div>
+
+        <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {events.map((e, k) => {
+            const d = new Date(e.date);
+            const st = typeStyle[e.type] ?? typeStyle.Event;
+            return (
+              <li key={e.title}>
+                <Reveal delay={k * 0.1} y={60} className="h-full">
+                  <TiltCard className="group h-full">
+                    <Link
+                      href="/news-events"
+                      data-cursor="Read"
+                      className="flex h-full flex-col border border-navy/10 bg-white transition-shadow duration-300 hover:shadow-[0_50px_70px_-35px_rgba(0,39,99,0.55)]"
+                    >
+                      <div className={`relative flex h-48 items-end justify-between overflow-hidden p-6 ${st.bg} ${st.fg}`}>
+                        <Shape
+                          name={st.shape}
+                          className="absolute -right-6 -top-6 h-36 w-36 opacity-30 transition-transform duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-x-6 group-hover:translate-y-6 group-hover:rotate-[30deg] group-hover:opacity-60"
+                        />
+                        <p className="leading-none [transform:translateZ(40px)]">
+                          <span className="block text-[4.4rem] font-light tracking-[-0.05em]">{String(d.getDate()).padStart(2, '0')}</span>
+                          <span className="mt-2 block text-[12px] font-semibold uppercase tracking-[0.2em]">
+                            {d.toLocaleString('en', { month: 'long' })} {d.getFullYear()}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="flex flex-1 flex-col p-6">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-blue">{e.type}</p>
+                        <h3 className="mt-3 text-[1.3rem] font-semibold leading-snug text-navy">{e.title}</h3>
+                        <p className="mt-3 flex-1 text-[14px] leading-relaxed text-ink">{e.desc}</p>
+                        <span className="mt-6 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-navy">
+                          Read more <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        </span>
+                      </div>
+                    </Link>
+                  </TiltCard>
+                </Reveal>
+              </li>
+            );
+          })}
+        </ul>
       </section>
 
-      {/* Admissions CTA */}
-      <section className="relative isolate overflow-hidden bg-navy py-24">
-        <div className="absolute -left-24 -top-24 -z-10 h-96 w-96 rounded-full bg-red/30 blur-[110px]" />
-        <div className="absolute -bottom-32 -right-24 -z-10 h-96 w-96 rounded-full bg-gold/25 blur-[110px]" />
-        <Reveal className="mx-auto max-w-4xl px-6 text-center">
-          <span className="eyebrow eyebrow--light eyebrow--center mb-5">Admissions</span>
-          <h2 className="display-heading !text-white text-4xl md:text-6xl [&_em]:!text-gold">
-            Begin your child&rsquo;s <em>journey</em> with us
-          </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/75">
-            Speak to our admissions team, visit the campus, and see why families trust Gyan Niketan.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/admissions" className="group inline-flex items-center gap-3 rounded-full bg-red px-9 py-4 text-[13px] font-extrabold uppercase tracking-[0.16em] text-white transition-all hover:-translate-y-0.5 hover:bg-red-dark">
-              Apply now <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-            <a href={school.phoneHref} className="inline-flex items-center gap-3 rounded-full border border-white/35 px-9 py-4 text-[13px] font-extrabold uppercase tracking-[0.16em] text-white transition-all hover:bg-white hover:text-navy">
-              <Phone size={16} /> {school.phone}
-            </a>
+      {/* Admissions band */}
+      <section aria-labelledby="cta-heading" className="frame">
+        <div className="relative isolate overflow-hidden bg-yellow px-6 py-28 sm:px-12 md:py-36 lg:px-[8%]">
+          <ScrollShape name="quarters" className="absolute -right-24 -top-24 -z-10 h-72 w-72 text-pink md:h-[460px] md:w-[460px]" rotate={180} y={60} />
+          <ScrollShape name="chevrons" className="absolute bottom-16 right-[32%] -z-10 hidden h-24 w-24 text-blue lg:block" rotate={0} y={140} />
+          <ScrollShape name="ring" className="absolute -bottom-24 left-[46%] -z-10 h-52 w-52 text-coral/80" rotate={-240} y={80} />
+          <ScrollShape name="triangle" className="absolute right-[14%] top-[58%] -z-10 hidden h-16 w-16 text-green md:block" rotate={360} y={200} />
+          <div className="max-w-3xl">
+            <p className="eyebrow mb-6">Admissions 2026–27</p>
+            <h2 id="cta-heading" className="text-[2.9rem] font-semibold leading-[1.02] tracking-[-0.035em] text-navy sm:text-6xl lg:text-[5rem]">
+              <SplitOnView text="Begin Your Child’s Journey With Us" />
+            </h2>
+            <Reveal delay={0.2}>
+              <p className="mt-8 max-w-xl text-[17px] leading-[1.8] text-navy/80">
+                Speak to our admissions team, visit the campus, and see why families have trusted Gyan Niketan for four decades.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Magnetic>
+                  <Link href="/admissions" className="btn-primary !border-navy !bg-navy !text-white hover:!border-blue hover:!bg-blue">
+                    Apply now
+                  </Link>
+                </Magnetic>
+                <Magnetic>
+                  <a href={school.phoneHref} className="btn-outline !border-navy">
+                    <Phone size={15} /> {school.phone}
+                  </a>
+                </Magnetic>
+              </div>
+            </Reveal>
           </div>
-        </Reveal>
+        </div>
       </section>
     </div>
   );

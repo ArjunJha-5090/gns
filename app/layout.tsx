@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/inter";
-import "@fontsource-variable/playfair-display";
-import "@fontsource/great-vibes";
+import "@fontsource/poppins/300.css";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/500.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/poppins/700.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SideTabs from "@/components/SideTabs";
+import SmoothScroll from "@/components/fx/SmoothScroll";
+import Cursor from "@/components/fx/Cursor";
+import ScrollProgress from "@/components/fx/ScrollProgress";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import Preloader from "@/components/Preloader";
 import Providers from "@/components/Providers";
@@ -55,7 +61,7 @@ export default function RootLayout({
         <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="shortcut icon" href="/logo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo.png" />
-        <meta name="theme-color" content="#0f172a" />
+        <meta name="theme-color" content="#002763" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -111,9 +117,13 @@ export default function RootLayout({
         <Providers>
           <a href="#main" className="skip-link">Skip to content</a>
           <Preloader />
+          <SmoothScroll />
+          <ScrollProgress />
+          <Cursor />
           <Navbar />
           <main id="main">{children}</main>
           <Footer />
+          <SideTabs />
           <aside aria-label="Chat assistant">
             <ChatbotWidget />
           </aside>
